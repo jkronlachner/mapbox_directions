@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:latlng/latlng.dart';
-import 'package:mapbox_route/src/enums/MBGeometries.dart';
-import 'package:mapbox_route/src/enums/MBOverview.dart';
-import 'package:mapbox_route/src/enums/MBProfile.dart';
 
+import '../mapbox_directions.dart';
 import 'MBResponse.dart';
+import 'enums/MBGeometries.dart';
 
 class MBRoute {
   static String _API_TOKEN = "";
