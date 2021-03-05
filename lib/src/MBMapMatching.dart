@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:latlng/latlng.dart';
-import 'package:mapbox_route/enums/MBGeometries.dart';
-import 'package:mapbox_route/enums/MBOverview.dart';
-import 'package:mapbox_route/enums/MBProfile.dart';
+import 'package:mapbox_route/src/enums/MBGeometries.dart';
+import 'package:mapbox_route/src/enums/MBOverview.dart';
+import 'package:mapbox_route/src/enums/MBProfile.dart';
 
 import 'MBResponse.dart';
 

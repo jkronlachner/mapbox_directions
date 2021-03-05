@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:latlng/latlng.dart';
-import 'package:mapbox_route/MBMapMatching.dart';
-import 'package:mapbox_route/MBResponse.dart';
-import 'package:mapbox_route/enums/MBProfile.dart';
-import 'package:mapbox_route/token.dart';
+import 'package:mapbox_route/src/MBMapMatching.dart';
+import 'package:mapbox_route/src/MBResponse.dart';
+import 'package:mapbox_route/src/enums/MBProfile.dart';
+import 'package:mapbox_route/src/token.dart';
 
 void main() {
   test('Basic functionality', () async {
