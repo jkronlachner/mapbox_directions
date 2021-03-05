@@ -1,8 +1,9 @@
 name: mapbox_directions
 description: A Flutter Package for easier route fetching from Mapbox
-version: 0.0.1
-author: Julian Kronlachner
+version: 0.0.2
 homepage: https://lab73.at
+repository: https://github.com/jkronlachner/mapbox_directions
+
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
