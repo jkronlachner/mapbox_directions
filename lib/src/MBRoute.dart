@@ -6,17 +6,18 @@ import 'package:latlng/latlng.dart';
 
 import '../mapbox_directions.dart';
 import 'MBResponse.dart';
+import 'enums/MBExcludeFlag.dart';
 import 'enums/MBGeometries.dart';
 
 class MBRoute {
-  static String _API_TOKEN = "";
+  static String _apiToken = "";
   static MBRoute instance = new MBRoute();
 
-  String _mapbox_endpoint = "api.mapbox.com";
+  String _mapboxEndpoint = "api.mapbox.com";
 
   ///Sets the Mapbox API Token
   void setApiToken(String apiToken) {
-    MBRoute._API_TOKEN = apiToken;
+    MBRoute._apiToken = apiToken;
   }
 
   ///Returns the [MBRoute] Object to your provided Coordinates
@@ -25,26 +26,36 @@ class MBRoute {
   /// There can be between 2 and 100 coordinates
   /// [profile] Profile to be used for Mapbox Directions
   /// should be one of [MBProfile]
-  Future<MBResponse> getRouteTo(List<LatLng> coordinates, MBProfile profile,
-      {MBOverview overview = MBOverview.full,
-      MBGeometries geometries = MBGeometries.geojson}) async {
+  /// [overview] Level of Detail for Route
+  /// [geometries] Format of returned geometry
+  /// [alternatives] Whether to return alternatives
+  /// [excludes] Exclude certain road types.
+  Future<MBResponse> getRouteTo(
+    List<LatLng> coordinates,
+    MBProfile profile, {
+    MBOverview overview = MBOverview.full,
+    MBGeometries geometries = MBGeometries.geojson,
+    bool alternatives = false,
+    List<MBExcludeFlag> excludes,
+  }) async {
     //Check API Token
-    if (_API_TOKEN.isEmpty)
+    if (_apiToken.isEmpty)
       throw ArgumentError.value(
-          _API_TOKEN, "API Token", "Please set a API Token first!");
+          _apiToken, "API Token", "Please set a API Token first!");
     //Build Url
     String url = "/directions/v5";
     url = _addProfileToEndpointUrl(url, profile);
     url = _addCoordinatesToEndpointUrl(url, coordinates);
     //Create URI
-    Uri uri = Uri.https(_mapbox_endpoint, url,
-        {'access_token': _API_TOKEN, ..._getOptionalsMap(overview: overview)});
+    Uri uri = Uri.https(_mapboxEndpoint, url,
+        {'access_token': _apiToken, ..._getOptionalsMap(overview: overview)});
     Response response = await http.get(uri);
-    MBResponse route = MBResponse.fromJson(json.decode(response.body));
-    return route;
+    MBResponse mbResponse = MBResponse.fromJson(json.decode(response.body));
+    return mbResponse;
   }
 
   //MARK: Private Functions
+  /// Adds the profile String to our URI
   String _addProfileToEndpointUrl(String url, MBProfile profile) {
     switch (profile) {
       case MBProfile.DRIVING:
@@ -61,6 +72,7 @@ class MBRoute {
     }
   }
 
+  /// Adds coordinates to URI
   String _addCoordinatesToEndpointUrl(String url, List<LatLng> coordinates) {
     if (coordinates.length < 2) {
       throw ArgumentError.value(coordinates, "Coordinates",
@@ -74,6 +86,7 @@ class MBRoute {
             .join(";");
   }
 
+  /// Adds optionals to URI
   Map<String, String> _getOptionalsMap(
       {MBOverview overview, MBGeometries geometries}) {
     Map<String, String> map = new Map();

@@ -1,5 +1,11 @@
 import 'package:latlng/latlng.dart';
+import 'package:mapbox_directions/mapbox_directions.dart';
 
+/// Response object for routes
+/// [routes] All routes including alternatives
+/// [waypoints] Waypoints that where given during route generation
+/// [code] string indicating whether request was a success
+/// [uuid] unique uuid for route
 class MBResponse {
   List<Route> routes;
   List<Waypoints> waypoints;
@@ -16,7 +22,7 @@ class MBResponse {
       });
     }
     if (json['waypoints'] != null) {
-      waypoints = new List<Waypoints>();
+      waypoints = [];
       json['waypoints'].forEach((v) {
         waypoints.add(new Waypoints.fromJson(v));
       });
@@ -39,6 +45,13 @@ class MBResponse {
   }
 }
 
+/// A Route object, included in [MBResponse]
+/// [weightName] A string indicating which weight was used. The default is routability, which is duration-based, with additional penalties for less desirable maneuvers.
+/// [weight] A float indicating the weight in units described by weight_name.
+/// [geometry] Geometry of route depending on [MBGeometries]
+/// [legs] An array of route leg objects.
+/// [duration] Duration of trip in seconds
+/// [distance] distance of trip in meters
 class Route {
   String weightName;
   double weight;
@@ -98,7 +111,7 @@ class Legs {
 
   Legs.fromJson(Map<String, dynamic> json) {
     if (json['admins'] != null) {
-      admins = new List<Admins>();
+      admins = [];
       json['admins'].forEach((v) {
         admins.add(new Admins.fromJson(v));
       });
