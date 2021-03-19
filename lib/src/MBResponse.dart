@@ -70,9 +70,9 @@ class Route {
 
   Route.fromJson(Map<String, dynamic> json) {
     weightName = json['weight_name'];
-    weight = json['weight'];
-    duration = json['duration'];
-    distance = json['distance'];
+    weight = double.parse(json['weight'].toString());
+    duration = double.parse(json['duration'].toString());
+    distance = double.parse(json['distance'].toString());
     if (json['legs'] != null) {
       legs = [];
       json['legs'].forEach((v) {
@@ -117,8 +117,8 @@ class Legs {
       });
     }
     weight = json['weight'];
-    duration = json['duration'];
-    distance = json['distance'];
+    duration = double.parse(json['duration'].toString());
+    distance = double.parse(json['distance'].toString());
     summary = json['summary'];
   }
 

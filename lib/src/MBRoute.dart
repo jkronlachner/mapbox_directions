@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:latlng/latlng.dart';
@@ -36,7 +37,7 @@ class MBRoute {
     MBOverview overview = MBOverview.full,
     MBGeometries geometries = MBGeometries.geojson,
     bool alternatives = false,
-    List<MBExcludeFlag> excludes,
+    List<MBExcludeFlag> excludes = const [],
   }) async {
     //Check API Token
     if (_apiToken.isEmpty)
@@ -47,8 +48,14 @@ class MBRoute {
     url = _addProfileToEndpointUrl(url, profile);
     url = _addCoordinatesToEndpointUrl(url, coordinates);
     //Create URI
-    Uri uri = Uri.https(_mapboxEndpoint, url,
-        {'access_token': _apiToken, ..._getOptionalsMap(overview: overview)});
+    Uri uri = Uri.https(_mapboxEndpoint, url, {
+      'access_token': _apiToken,
+      ..._getOptionalsMap(
+          overview: overview,
+          geometries: geometries,
+          alternatives: alternatives,
+          excludes: excludes)
+    });
     Response response = await http.get(uri);
     MBResponse mbResponse = MBResponse.fromJson(json.decode(response.body));
     return mbResponse;
@@ -87,8 +94,12 @@ class MBRoute {
   }
 
   /// Adds optionals to URI
-  Map<String, String> _getOptionalsMap(
-      {MBOverview overview, MBGeometries geometries}) {
+  Map<String, String> _getOptionalsMap({
+    MBOverview overview,
+    MBGeometries geometries,
+    List<MBExcludeFlag> excludes = const [],
+    bool alternatives,
+  }) {
     Map<String, String> map = new Map();
 
     //region Overview
@@ -124,6 +135,14 @@ class MBRoute {
     }
     //endregion
 
+    const alternativesKey = "alternatives";
+    map[alternativesKey] = alternatives.toString();
+
+    if (excludes.isNotEmpty) {
+      const excludesKey = "exclude";
+      map[excludesKey] =
+          excludes.map((e) => EnumToString.convertToString(e)).join(";");
+    }
     return map;
   }
 }
